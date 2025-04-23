@@ -31,6 +31,6 @@ VOLUME /data
 ENTRYPOINT ["python", "gatherings_mcp_server.py"]
 
 # Add metadata labels
-LABEL org.opencontainers.image.title="Gatherings MCP Server"
+LABEL org.opencontainers.image.title="Gatherings MCP Python Server"
 LABEL org.opencontainers.image.description="A Model Context Protocol server for managing gatherings and expense sharing"
 LABEL org.opencontainers.image.licenses="Apache-2.0"

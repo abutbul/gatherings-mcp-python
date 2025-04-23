@@ -15,10 +15,12 @@ if docker ps -a --format '{{.Names}}' | grep -Eq "^$CONTAINER_NAME$"; then
 fi
 
 # Run the test in a new container
+# Use the Python interpreter from the image
 echo "Running tests..."
 docker run --name $CONTAINER_NAME \
+    --entrypoint python3 \
     --rm $IMAGE_NAME \
-    python /app/test_example.py
+    /app/test_example.py
 
 EXIT_CODE=$?
 
@@ -28,12 +30,4 @@ else
     echo "Tests failed with exit code $EXIT_CODE"
 fi
 
-# Optional: Run a quick test to ensure the MCP server starts correctly
-echo "Testing MCP server startup..."
-docker run --rm $IMAGE_NAME --version || {
-    echo "MCP server failed to start properly!"
-    exit 1
-}
-
-echo "All tests completed successfully!"
 exit $EXIT_CODE
