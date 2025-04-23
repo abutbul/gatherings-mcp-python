@@ -1,0 +1,71 @@
+name: Test and Build Python MCP Server
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the repository
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # Set up Python environment
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'  # Updated from 3.9 to 3.10 to meet MCP requirements
+
+    # Install Python dependencies using uv
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip uv
+        uv pip install --system -r requirements.txt
+
+    # Run Python tests
+    - name: Run Python tests
+      run: |
+        python test_example.py > test_results.log 2>&1
+      continue-on-error: false
+
+    # Upload test logs as artifacts
+    - name: Upload test logs
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-logs
+        path: test_results.log
+        retention-days: 7
+
+    # Build Docker image
+    - name: Build Docker image
+      run: |
+        # Use the same image name as in docker-test.sh for consistency, though the script rebuilds it.
+        docker build -t gatherings-mcp-test .
+
+    # Test Docker image using the script and generate artifacts
+    - name: Test Docker image and Generate Artifacts
+      run: |
+        # Export information about the built image
+        docker inspect gatherings-mcp-test > docker-image-info.json
+        # Make the test script executable and run it
+        chmod +x ./docker-test.sh
+        ./docker-test.sh
+        # Create result log only if the script succeeds
+        echo "Docker build and test successful" > docker-build-result.log
+
+    # Upload build artifacts
+    - name: Upload build artifacts
+      if: always() # Upload artifacts regardless of success or failure
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-artifacts
+        path: |
+          docker-image-info.json
+          docker-build-result.log
+        retention-days: 5

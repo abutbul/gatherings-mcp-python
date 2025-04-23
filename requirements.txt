@@ -1,2 +1,2 @@
 sqlalchemy>=1.4.0
-mcp
+mcp[cli]
