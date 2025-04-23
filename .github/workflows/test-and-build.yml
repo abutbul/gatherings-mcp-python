@@ -21,11 +21,11 @@ jobs:
       with:
         python-version: '3.9'
 
-    # Install Python dependencies
+    # Install Python dependencies using uv
     - name: Install Python dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        python -m pip install --upgrade pip uv
+        uv pip install -r requirements.txt
 
     # Run Python tests
     - name: Run Python tests

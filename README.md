@@ -1,6 +1,20 @@
 # Gatherings MCP Server
 
-A Machine Conversation Protocol (MCP) server interface for the Gatherings expense-sharing application.
+A Model Context Protocol server for managing gatherings and expense sharing.
+
+## Dependency Management
+
+This project uses `uv` for Python dependency management instead of `pip`. This change is necessary due to dependency requirements from the [Model Context Protocol Python SDK](https://github.com/modelcontextprotocol/python-sdk).
+
+Ensure you have `uv` installed or install it via pip:
+```bash
+pip install uv
+```
+
+To install project dependencies:
+```bash
+uv pip install -r requirements.txt
+```
 
 ## Overview
 

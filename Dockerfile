@@ -9,10 +9,10 @@ RUN apt-get update && apt-get install -y \
 # Set up working directory
 WORKDIR /app
 
-# Copy Python requirements and install dependencies
+# Copy Python requirements and install dependencies using uv
 COPY requirements.txt .
-RUN python -m pip install --upgrade pip \
-    && python -m pip install -r requirements.txt
+RUN python -m pip install --upgrade pip uv \
+    && uv pip install -r requirements.txt
 
 # Copy all app files
 COPY gatherings.py models.py services.py gatherings_mcp_server.py ./
