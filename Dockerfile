@@ -11,8 +11,8 @@ WORKDIR /app
 
 # Copy Python requirements and install dependencies using uv
 COPY requirements.txt .
-RUN python -m pip install --upgrade pip uv \
-    && uv pip install -r requirements.txt
+RUN python -m pip install --upgrade pip uv && \
+    uv pip install --system -r requirements.txt
 
 # Copy all app files
 COPY gatherings.py models.py services.py gatherings_mcp_server.py ./
@@ -20,8 +20,9 @@ COPY gatherings.py models.py services.py gatherings_mcp_server.py ./
 COPY test_example.py ./
 
 # Set environment variables
-ENV GATHERINGS_DB_PATH=/data/gatherings.db
-ENV GATHERINGS_SCRIPT=/app/gatherings.py
+ENV PYTHONUNBUFFERED=1 \
+    GATHERINGS_DB_PATH=/data/gatherings.db \
+    GATHERINGS_SCRIPT=/app/gatherings.py
 
 # Create volume for data persistence
 VOLUME /data
